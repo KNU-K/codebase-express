@@ -7,17 +7,22 @@ class ServerManger {
   config(config) {
     const middlewares = config.middlewares;
     const routes = config.routes;
-    if (!routes) {
-      middlewares.map((middleware) => {
-        app.use(middleware);
-      });
-    }
-    if (!middlewares) {
-      routes.map((route) => {
-        app.use(route[0], route[1]);
-      });
-    }
+    this.routeApi(routes);
+    this.routeMiddleware(middlewares);
+
     return this;
+  }
+  routeApi(routes) {
+    if (!routes) return;
+    routes.map((route) => {
+      app.use(route[0], route[1]);
+    });
+  }
+  routeMiddleware(middlewares) {
+    if (!middlewares) return;
+    middlewares.map((middleware) => {
+      app.use(middleware);
+    });
   }
   run() {
     app.listen(this.port, () => {
